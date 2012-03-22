@@ -4,8 +4,8 @@
     <meta charset=utf-8 />
     <title>numberformat.js Test Suite</title>
     <script src="../currency.js"></script>
-    <script src="../i18n.js"></script>
     <script src="../numberformat.js"></script>
+    <script src="../numberformatsymbols.js"></script>
   </head>
   <body>
     <h1>numberformat.js Test Suite</h1>
@@ -15,7 +15,7 @@
         // test the output
         console.log(formatter.format(12345.678));
 
-        i18n.NumberFormatSymbols = i18n.NumberFormatSymbols_en_GB; 
+        NumberFormat.Symbols = NumberFormat.Symbols_en_GB; 
 
         // redefine formatter (in order to use new symbols set)
         formatter = new NumberFormat(NumberFormat.Format.CURRENCY);

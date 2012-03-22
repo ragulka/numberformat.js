@@ -32,7 +32,7 @@
      */
     var NumberFormat = function(pattern, opt_currency, opt_currencyStyle) {
       this.intlCurrencyCode_ = opt_currency ||
-          i18n.NumberFormatSymbols.DEF_CURRENCY_CODE;
+          NumberFormat.Symbols.DEF_CURRENCY_CODE;
     
       this.currencyStyle_ = opt_currencyStyle ||
           NumberFormat.CurrencyStyle.LOCAL;
@@ -153,17 +153,17 @@
     NumberFormat.prototype.applyStandardPattern_ = function(patternType) {
       switch (patternType) {
         case NumberFormat.Format.DECIMAL:
-          this.applyPattern_(i18n.NumberFormatSymbols.DECIMAL_PATTERN);
+          this.applyPattern_(NumberFormat.Symbols.DECIMAL_PATTERN);
           break;
         case NumberFormat.Format.SCIENTIFIC:
-          this.applyPattern_(i18n.NumberFormatSymbols.SCIENTIFIC_PATTERN);
+          this.applyPattern_(NumberFormat.Symbols.SCIENTIFIC_PATTERN);
           break;
         case NumberFormat.Format.PERCENT:
-          this.applyPattern_(i18n.NumberFormatSymbols.PERCENT_PATTERN);
+          this.applyPattern_(NumberFormat.Symbols.PERCENT_PATTERN);
           break;
         case NumberFormat.Format.CURRENCY:
           this.applyPattern_(currency.adjustPrecision(
-              i18n.NumberFormatSymbols.CURRENCY_PATTERN,
+              NumberFormat.Symbols.CURRENCY_PATTERN,
               this.intlCurrencyCode_));
           break;
         default:
@@ -213,8 +213,8 @@
       }
     
       // process digits or Inf, find decimal position
-      if (text.indexOf(i18n.NumberFormatSymbols.INFINITY, pos[0]) == pos[0]) {
-        pos[0] += i18n.NumberFormatSymbols.INFINITY.length;
+      if (text.indexOf(NumberFormat.Symbols.INFINITY, pos[0]) == pos[0]) {
+        pos[0] += NumberFormat.Symbols.INFINITY.length;
         ret = Infinity;
       } else {
         ret = this.parseNumber_(text, pos);
@@ -252,9 +252,9 @@
       var sawExponent = false;
       var sawDigit = false;
       var scale = 1;
-      var decimal = i18n.NumberFormatSymbols.DECIMAL_SEP;
-      var grouping = i18n.NumberFormatSymbols.GROUP_SEP;
-      var exponentChar = i18n.NumberFormatSymbols.EXP_SYMBOL;
+      var decimal = NumberFormat.Symbols.DECIMAL_SEP;
+      var grouping = NumberFormat.Symbols.GROUP_SEP;
+      var exponentChar = NumberFormat.Symbols.EXP_SYMBOL;
     
       var normalizedText = '';
       for (; pos[0] < text.length; pos[0]++) {
@@ -287,7 +287,7 @@
           sawExponent = true;
         } else if (ch == '+' || ch == '-') {
           normalizedText += ch;
-        } else if (ch == i18n.NumberFormatSymbols.PERCENT.charAt(0)) {
+        } else if (ch == NumberFormat.Symbols.PERCENT.charAt(0)) {
           if (scale != 1) {
             break;
           }
@@ -296,7 +296,7 @@
             pos[0]++; // eat this character if parse end here
             break;
           }
-        } else if (ch == i18n.NumberFormatSymbols.PERMILL.charAt(0)) {
+        } else if (ch == NumberFormat.Symbols.PERMILL.charAt(0)) {
           if (scale != 1) {
             break;
           }
@@ -321,7 +321,7 @@
      */
     NumberFormat.prototype.format = function(number) {
       if (isNaN(number)) {
-        return i18n.NumberFormatSymbols.NAN;
+        return NumberFormat.Symbols.NAN;
       }
     
       var parts = [];
@@ -333,7 +333,7 @@
       parts.push(isNegative ? this.negativePrefix_ : this.positivePrefix_);
     
       if (!isFinite(number)) {
-        parts.push(i18n.NumberFormatSymbols.INFINITY);
+        parts.push(NumberFormat.Symbols.INFINITY);
       } else {
         // convert number to non-negative value
         number *= isNegative ? -1 : 1;
@@ -384,11 +384,11 @@
       }
       intPart = translatableInt + intPart;
     
-      var decimal = i18n.NumberFormatSymbols.DECIMAL_SEP;
-      var grouping = i18n.NumberFormatSymbols.GROUP_SEP;
+      var decimal = NumberFormat.Symbols.DECIMAL_SEP;
+      var grouping = NumberFormat.Symbols.GROUP_SEP;
       var zeroCode = NumberFormat.enforceAsciiDigits_ ?
                      48  /* ascii '0' */ :
-                     i18n.NumberFormatSymbols.ZERO_DIGIT.charCodeAt(0);
+                     NumberFormat.Symbols.ZERO_DIGIT.charCodeAt(0);
       var digitLen = intPart.length;
     
       if (intValue > 0 || minIntDigits > 0) {
@@ -437,18 +437,18 @@
      * @private
      */
     NumberFormat.prototype.addExponentPart_ = function(exponent, parts) {
-      parts.push(i18n.NumberFormatSymbols.EXP_SYMBOL);
+      parts.push(NumberFormat.Symbols.EXP_SYMBOL);
     
       if (exponent < 0) {
         exponent = -exponent;
-        parts.push(i18n.NumberFormatSymbols.MINUS_SIGN);
+        parts.push(NumberFormat.Symbols.MINUS_SIGN);
       } else if (this.useSignForPositiveExponent_) {
-        parts.push(i18n.NumberFormatSymbols.PLUS_SIGN);
+        parts.push(NumberFormat.Symbols.PLUS_SIGN);
       }
     
       var exponentDigits = '' + exponent;
       var zeroChar = NumberFormat.enforceAsciiDigits_ ? '0' :
-                     i18n.NumberFormatSymbols.ZERO_DIGIT;
+                     NumberFormat.Symbols.ZERO_DIGIT;
       for (var i = exponentDigits.length; i < this.minExponentDigits_; i++) {
         parts.push(zeroChar);
       }
@@ -517,7 +517,7 @@
       if (48 <= code && code < 58) {
         return code - 48;
       } else {
-        var zeroCode = i18n.NumberFormatSymbols.ZERO_DIGIT.charCodeAt(0);
+        var zeroCode = NumberFormat.Symbols.ZERO_DIGIT.charCodeAt(0);
         return zeroCode <= code && code < zeroCode + 10 ? code - zeroCode : -1;
       }
     };
@@ -691,14 +691,14 @@
                 throw Error('Too many percent/permill');
               }
               this.multiplier_ = 100;
-              affix += i18n.NumberFormatSymbols.PERCENT;
+              affix += NumberFormat.Symbols.PERCENT;
               break;
             case NumberFormat.PATTERN_PER_MILLE_:
               if (this.multiplier_ != 1) {
                 throw Error('Too many percent/permill');
               }
               this.multiplier_ = 1000;
-              affix += i18n.NumberFormatSymbols.PERMILL;
+              affix += NumberFormat.Symbols.PERMILL;
               break;
             default:
               affix += ch;
