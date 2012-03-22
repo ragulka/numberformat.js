@@ -1,3 +1,4 @@
+// Copyright 2006 The Closure Library Authors. All Rights Reserved
 // Copyright 2012 Oliver Wong. All Rights Reserved
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
