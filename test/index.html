@@ -1,0 +1,27 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset=utf-8 />
+    <title>numberformat.js Test Suite</title>
+    <script src="../currency.js"></script>
+    <script src="../i18n.js"></script>
+    <script src="../numberformat.js"></script>
+  </head>
+  <body>
+    <h1>numberformat.js Test Suite</h1>
+    <script type="text/javascript">
+        var formatter = new NumberFormat(NumberFormat.Format.CURRENCY);
+
+        // test the output
+        console.log(formatter.format(12345.678));
+
+        i18n.NumberFormatSymbols = i18n.NumberFormatSymbols_en_GB; 
+
+        // redefine formatter (in order to use new symbols set)
+        formatter = new NumberFormat(NumberFormat.Format.CURRENCY);
+
+        // see the differences
+        console.log(formatter.format(12345.678));
+    </script>
+  </body>
+</html>
