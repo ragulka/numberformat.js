@@ -6,6 +6,7 @@
     <script src="../currency.js"></script>
     <script src="../numberformat.js"></script>
     <script src="../locale/es_ES.js"></script>
+    <script src="../locale/en_GB.js"></script>
   </head>
   <body>
     <h1>numberformat.js Test Suite</h1>
@@ -17,6 +18,12 @@
 
         // redefine formatter (in order to use new symbols set)
         formatter = new NumberFormat('es_ES', NumberFormat.Format.CURRENCY);
+
+        // see the differences
+        console.log(formatter.format(12345.678));
+        
+        // redefine formatter (in order to use new symbols set)
+        formatter = new NumberFormat('en_GB', NumberFormat.Format.CURRENCY);
 
         // see the differences
         console.log(formatter.format(12345.678));
