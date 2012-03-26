@@ -1,6 +1,9 @@
 // Copyright 2009 The Closure Library Authors. All Rights Reserved
 // Copyright 2012 Oliver Wong. All Rights Reserved
 //
+// Adapted from Google Closure:
+// http://code.google.com/p/closure-library/source/browse/trunk/closure/goog/i18n/
+//
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at

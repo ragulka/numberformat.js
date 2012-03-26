@@ -10,15 +10,13 @@
   <body>
     <h1>numberformat.js Test Suite</h1>
     <script type="text/javascript">
-        var formatter = new NumberFormat(NumberFormat.Format.CURRENCY);
+        var formatter = new NumberFormat('en', NumberFormat.Format.CURRENCY);
 
         // test the output
         console.log(formatter.format(12345.678));
 
-        NumberFormat.Symbols = NumberFormat.Symbols_en_GB; 
-
         // redefine formatter (in order to use new symbols set)
-        formatter = new NumberFormat(NumberFormat.Format.CURRENCY);
+        formatter = new NumberFormat('en_GB', NumberFormat.Format.CURRENCY);
 
         // see the differences
         console.log(formatter.format(12345.678));

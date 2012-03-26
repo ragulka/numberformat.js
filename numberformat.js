@@ -1,6 +1,9 @@
 // Copyright 2006 The Closure Library Authors. All Rights Reserved
 // Copyright 2012 Oliver Wong. All Rights Reserved
 //
+// Adapted from Google Closure:
+// http://code.google.com/p/closure-library/source/browse/trunk/closure/goog/i18n/
+//
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
@@ -21,6 +24,7 @@
 
     /**
      * Constructor of NumberFormat.
+     * @param {string} locale The locale code (ex: "en_US")
      * @param {number|string} pattern The number that indicates a predefined
      *     number format pattern.
      * @param {string=} opt_currency Optional international currency
@@ -30,9 +34,11 @@
      *        NumberFormat.CurrencyStyle.
      * @constructor
      */
-    var NumberFormat = function(pattern, opt_currency, opt_currencyStyle) {
+    var NumberFormat = function(locale, pattern, opt_currency, opt_currencyStyle) {
+      this.locale = locale || 'en';
+      
       this.intlCurrencyCode_ = opt_currency ||
-          NumberFormat.Symbols.DEF_CURRENCY_CODE;
+          NumberFormat.locale[this.locale].DEF_CURRENCY_CODE;
     
       this.currencyStyle_ = opt_currencyStyle ||
           NumberFormat.CurrencyStyle.LOCAL;
@@ -62,6 +68,26 @@
       }
     };
     
+    // create locale with just en (default) for now
+    NumberFormat.locale = {
+      'en' : {
+          DECIMAL_SEP: '.',
+          GROUP_SEP: ',',
+          PERCENT: '%',
+          ZERO_DIGIT: '0',
+          PLUS_SIGN: '+',
+          MINUS_SIGN: '-',
+          EXP_SYMBOL: 'E',
+          PERMILL: '\u2030',
+          INFINITY: '\u221E',
+          NAN: 'NaN',
+          DECIMAL_PATTERN: '#,##0.###',
+          SCIENTIFIC_PATTERN: '#E0',
+          PERCENT_PATTERN: '#,##0%',
+          CURRENCY_PATTERN: '\u00A4#,##0.00;(\u00A4#,##0.00)',
+          DEF_CURRENCY_CODE: 'USD'
+      }
+    };
     
     /**
      * Standard number formatting patterns.
@@ -153,17 +179,17 @@
     NumberFormat.prototype.applyStandardPattern_ = function(patternType) {
       switch (patternType) {
         case NumberFormat.Format.DECIMAL:
-          this.applyPattern_(NumberFormat.Symbols.DECIMAL_PATTERN);
+          this.applyPattern_(NumberFormat.locale[this.locale].DECIMAL_PATTERN);
           break;
         case NumberFormat.Format.SCIENTIFIC:
-          this.applyPattern_(NumberFormat.Symbols.SCIENTIFIC_PATTERN);
+          this.applyPattern_(NumberFormat.locale[this.locale].SCIENTIFIC_PATTERN);
           break;
         case NumberFormat.Format.PERCENT:
-          this.applyPattern_(NumberFormat.Symbols.PERCENT_PATTERN);
+          this.applyPattern_(NumberFormat.locale[this.locale].PERCENT_PATTERN);
           break;
         case NumberFormat.Format.CURRENCY:
           this.applyPattern_(currency.adjustPrecision(
-              NumberFormat.Symbols.CURRENCY_PATTERN,
+              NumberFormat.locale[this.locale].CURRENCY_PATTERN,
               this.intlCurrencyCode_));
           break;
         default:
@@ -213,8 +239,8 @@
       }
     
       // process digits or Inf, find decimal position
-      if (text.indexOf(NumberFormat.Symbols.INFINITY, pos[0]) == pos[0]) {
-        pos[0] += NumberFormat.Symbols.INFINITY.length;
+      if (text.indexOf(NumberFormat.locale[this.locale].INFINITY, pos[0]) == pos[0]) {
+        pos[0] += NumberFormat.locale[this.locale].INFINITY.length;
         ret = Infinity;
       } else {
         ret = this.parseNumber_(text, pos);
@@ -252,9 +278,9 @@
       var sawExponent = false;
       var sawDigit = false;
       var scale = 1;
-      var decimal = NumberFormat.Symbols.DECIMAL_SEP;
-      var grouping = NumberFormat.Symbols.GROUP_SEP;
-      var exponentChar = NumberFormat.Symbols.EXP_SYMBOL;
+      var decimal = NumberFormat.locale[this.locale].DECIMAL_SEP;
+      var grouping = NumberFormat.locale[this.locale].GROUP_SEP;
+      var exponentChar = NumberFormat.locale[this.locale].EXP_SYMBOL;
     
       var normalizedText = '';
       for (; pos[0] < text.length; pos[0]++) {
@@ -287,7 +313,7 @@
           sawExponent = true;
         } else if (ch == '+' || ch == '-') {
           normalizedText += ch;
-        } else if (ch == NumberFormat.Symbols.PERCENT.charAt(0)) {
+        } else if (ch == NumberFormat.locale[this.locale].PERCENT.charAt(0)) {
           if (scale != 1) {
             break;
           }
@@ -296,7 +322,7 @@
             pos[0]++; // eat this character if parse end here
             break;
           }
-        } else if (ch == NumberFormat.Symbols.PERMILL.charAt(0)) {
+        } else if (ch == NumberFormat.locale[this.locale].PERMILL.charAt(0)) {
           if (scale != 1) {
             break;
           }
@@ -321,7 +347,7 @@
      */
     NumberFormat.prototype.format = function(number) {
       if (isNaN(number)) {
-        return NumberFormat.Symbols.NAN;
+        return NumberFormat.locale[this.locale].NAN;
       }
     
       var parts = [];
@@ -333,7 +359,7 @@
       parts.push(isNegative ? this.negativePrefix_ : this.positivePrefix_);
     
       if (!isFinite(number)) {
-        parts.push(NumberFormat.Symbols.INFINITY);
+        parts.push(NumberFormat.locale[this.locale].INFINITY);
       } else {
         // convert number to non-negative value
         number *= isNegative ? -1 : 1;
@@ -384,11 +410,11 @@
       }
       intPart = translatableInt + intPart;
     
-      var decimal = NumberFormat.Symbols.DECIMAL_SEP;
-      var grouping = NumberFormat.Symbols.GROUP_SEP;
+      var decimal = NumberFormat.locale[this.locale].DECIMAL_SEP;
+      var grouping = NumberFormat.locale[this.locale].GROUP_SEP;
       var zeroCode = NumberFormat.enforceAsciiDigits_ ?
                      48  /* ascii '0' */ :
-                     NumberFormat.Symbols.ZERO_DIGIT.charCodeAt(0);
+                     NumberFormat.locale[this.locale].ZERO_DIGIT.charCodeAt(0);
       var digitLen = intPart.length;
     
       if (intValue > 0 || minIntDigits > 0) {
@@ -437,18 +463,18 @@
      * @private
      */
     NumberFormat.prototype.addExponentPart_ = function(exponent, parts) {
-      parts.push(NumberFormat.Symbols.EXP_SYMBOL);
+      parts.push(NumberFormat.locale[this.locale].EXP_SYMBOL);
     
       if (exponent < 0) {
         exponent = -exponent;
-        parts.push(NumberFormat.Symbols.MINUS_SIGN);
+        parts.push(NumberFormat.locale[this.locale].MINUS_SIGN);
       } else if (this.useSignForPositiveExponent_) {
-        parts.push(NumberFormat.Symbols.PLUS_SIGN);
+        parts.push(NumberFormat.locale[this.locale].PLUS_SIGN);
       }
     
       var exponentDigits = '' + exponent;
       var zeroChar = NumberFormat.enforceAsciiDigits_ ? '0' :
-                     NumberFormat.Symbols.ZERO_DIGIT;
+                     NumberFormat.locale[this.locale].ZERO_DIGIT;
       for (var i = exponentDigits.length; i < this.minExponentDigits_; i++) {
         parts.push(zeroChar);
       }
@@ -517,7 +543,7 @@
       if (48 <= code && code < 58) {
         return code - 48;
       } else {
-        var zeroCode = NumberFormat.Symbols.ZERO_DIGIT.charCodeAt(0);
+        var zeroCode = NumberFormat.locale[this.locale].ZERO_DIGIT.charCodeAt(0);
         return zeroCode <= code && code < zeroCode + 10 ? code - zeroCode : -1;
       }
     };
@@ -691,14 +717,14 @@
                 throw Error('Too many percent/permill');
               }
               this.multiplier_ = 100;
-              affix += NumberFormat.Symbols.PERCENT;
+              affix += NumberFormat.locale[this.locale].PERCENT;
               break;
             case NumberFormat.PATTERN_PER_MILLE_:
               if (this.multiplier_ != 1) {
                 throw Error('Too many percent/permill');
               }
               this.multiplier_ = 1000;
-              affix += NumberFormat.Symbols.PERMILL;
+              affix += NumberFormat.locale[this.locale].PERMILL;
               break;
             default:
               affix += ch;
