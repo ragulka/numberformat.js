@@ -6,12 +6,12 @@ NumberFormat.locale.de = {
     "PLUS_SIGN": "+",
     "MINUS_SIGN": "-",
     "EXP_SYMBOL": "E",
-    "PERMILL": "‰",
-    "INFINITY": "∞",
+    "PERMILL": "\u2030",
+    "INFINITY": "\u221e",
     "NAN": "NaN",
     "DECIMAL_PATTERN": "#,##0.###",
     "SCIENTIFIC_PATTERN": "#E0",
-    "PERCENT_PATTERN": "#,##0 %",
-    "CURRENCY_PATTERN": "#,##0.00 ¤",
+    "PERCENT_PATTERN": "#,##0\u00a0%",
+    "CURRENCY_PATTERN": "#,##0.00\u00a0\u00a4",
     "DEF_CURRENCY_CODE": "EUR"
 }

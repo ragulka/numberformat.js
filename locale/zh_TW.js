@@ -6,12 +6,12 @@ NumberFormat.locale.zh_TW = {
     "PLUS_SIGN": "+",
     "MINUS_SIGN": "-",
     "EXP_SYMBOL": "E",
-    "PERMILL": "‰",
-    "INFINITY": "∞",
-    "NAN": "非數值",
+    "PERMILL": "\u2030",
+    "INFINITY": "\u221e",
+    "NAN": "\u975e\u6578\u503c",
     "DECIMAL_PATTERN": "#,##0.###",
     "SCIENTIFIC_PATTERN": "#E0",
     "PERCENT_PATTERN": "#,##0%",
-    "CURRENCY_PATTERN": "¤#,##0.00",
+    "CURRENCY_PATTERN": "\u00a4#,##0.00",
     "DEF_CURRENCY_CODE": "TWD"
 }

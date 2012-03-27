@@ -6,12 +6,12 @@ NumberFormat.locale.ml_IN = {
     "PLUS_SIGN": "+",
     "MINUS_SIGN": "-",
     "EXP_SYMBOL": "E",
-    "PERMILL": "‰",
-    "INFINITY": "∞",
+    "PERMILL": "\u2030",
+    "INFINITY": "\u221e",
     "NAN": "NaN",
     "DECIMAL_PATTERN": "#,##,##0.###",
     "SCIENTIFIC_PATTERN": "#E0",
     "PERCENT_PATTERN": "#,##,##0%",
-    "CURRENCY_PATTERN": "#,##,##0.00¤",
+    "CURRENCY_PATTERN": "#,##,##0.00\u00a4",
     "DEF_CURRENCY_CODE": "INR"
 }
