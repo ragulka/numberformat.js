@@ -6,4 +6,4 @@
 expect = require('expect.js');
 current = require('../currency')
 NumberFormat = require('../numberformat');
-require('../locale/en_GB');
+require('../locale/fr');
