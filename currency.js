@@ -392,7 +392,7 @@
     
     if (typeof exports !== 'undefined') {
         if (typeof module !== 'undefined' && module.exports) {
-          exports = module.exports = NumberFormat;
+          exports = module.exports = currency;
         }
         exports.currency = currency;
     }

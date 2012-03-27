@@ -36,6 +36,7 @@
      */
     var NumberFormat = function(locale, pattern, opt_currency, opt_currencyStyle) {
       this.locale = locale || 'en';
+      pattern = pattern || NumberFormat.Format.DECIMAL;
       
       this.intlCurrencyCode_ = opt_currency ||
           NumberFormat.locale[this.locale].DEF_CURRENCY_CODE;
