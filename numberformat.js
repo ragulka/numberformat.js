@@ -59,6 +59,7 @@
       // The multiplier for use in percent, per mille, etc.
       this.multiplier_ = 1;
       this.groupingSize_ = 3;
+      this.groupingSize2_ = 0;
       this.decimalSeparatorAlwaysShown_ = false;
       this.useExponentialNotation_ = false;
     
@@ -425,10 +426,16 @@
     
         for (var i = 0; i < digitLen; i++) {
           parts.push(String.fromCharCode(zeroCode + intPart.charAt(i) * 1));
-    
-          if (digitLen - i > 1 && this.groupingSize_ > 0 &&
-              ((digitLen - i) % this.groupingSize_ == 1)) {
-            parts.push(grouping);
+          var cPos = digitLen - i;
+
+          if (cPos > 1 && this.groupingSize_ > 0) {
+            if (this.groupingSize2_ > 0 && cPos > this.groupingSize_ &&
+                (cPos - this.groupingSize_) % this.groupingSize2_ == 1 ) {
+              parts.push(grouping);
+            } else if (this.groupingSize2_ == 0 &&
+              cPos % this.groupingSize_ == 1) {
+              parts.push(grouping);
+            }
           }
         }
       } else if (!fractionPresent) {
@@ -751,6 +758,7 @@
       var zeroDigitCount = 0;
       var digitRightCount = 0;
       var groupingCount = -1;
+      var groupingCount2 = -1;
     
       var len = pattern.length;
       for (var loop = true; pos[0] < len && loop; pos[0]++) {
@@ -776,6 +784,7 @@
             }
             break;
           case NumberFormat.PATTERN_GROUPING_SEPARATOR_:
+            groupingCount2 = groupingCount;
             groupingCount = 0;
             break;
           case NumberFormat.PATTERN_DECIMAL_SEPARATOR_:
@@ -864,6 +873,7 @@
       }
     
       this.groupingSize_ = Math.max(0, groupingCount);
+      this.groupingSize2_ = Math.max(0, groupingCount2);
       this.decimalSeparatorAlwaysShown_ = decimalPos == 0 ||
                                           decimalPos == totalDigits;
     };
@@ -877,4 +887,5 @@
     else {
         root['NumberFormat'] = NumberFormat;
     }
+    
 })(this);
