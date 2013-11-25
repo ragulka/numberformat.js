@@ -359,6 +359,7 @@
       var isNegative = number < 0.0 || number == 0.0 && 1 / number < 0.0;
     
       parts.push(isNegative ? this.negativePrefix_ : this.positivePrefix_);
+
     
       if (!isFinite(number)) {
         parts.push(NumberFormat.locale[this.locale].INFINITY);
@@ -394,8 +395,8 @@
       var shiftedNumber = Math.round(number * power);
       var intValue, fracValue;
       if (isFinite(shiftedNumber)) {
-        intValue = Math.floor(shiftedNumber / power);
-        fracValue = Math.floor(shiftedNumber - intValue * power);
+        intValue = parseInt( number.toString().split('.')[0], 10);
+        fracValue = parseInt( number.toString().split('.')[1], 10);
       } else {
         intValue = number;
         fracValue = 0;
@@ -448,15 +449,16 @@
       if (this.decimalSeparatorAlwaysShown_ || fractionPresent) {
         parts.push(decimal);
       }
+
     
-      var fracPart = '' + (fracValue + power);
+      var fracPart = '' + fracValue
       var fracLen = fracPart.length;
       while (fracPart.charAt(fracLen - 1) == '0' &&
              fracLen > this.minimumFractionDigits_ + 1) {
         fracLen--;
       }
     
-      for (var i = 1; i < fracLen; i++) {
+      for (var i = 0; i < fracLen; i++) {
         parts.push(String.fromCharCode(zeroCode + fracPart.charAt(i) * 1));
       }
     };
@@ -887,5 +889,4 @@
     else {
         root['NumberFormat'] = NumberFormat;
     }
-    
 })(this);
